@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,5 +50,13 @@ public class MealsUtil {
 
     private static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
+    }
+
+    public static List<Meal> filterByDateTime(Collection<Meal> meals, LocalDate dateFrom, LocalDate dateTo
+            , LocalTime timeFrom, LocalTime timeTo) {
+        return meals.stream()
+                .filter(meal -> meal.getDate().isAfter(dateFrom) && meal.getDate().isBefore(dateTo))
+                .filter(meal -> meal.getTime().isAfter(timeFrom) && meal.getTime().isBefore(timeTo))
+                .collect(Collectors.toList());
     }
 }
