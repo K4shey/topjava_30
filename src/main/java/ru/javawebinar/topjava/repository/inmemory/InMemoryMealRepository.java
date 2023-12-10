@@ -8,7 +8,9 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,8 +27,18 @@ public class InMemoryMealRepository implements MealRepository {
     {
 
         for (Meal meal : MealsUtil.meals) {
-            save(SecurityUtil.authUserId(), meal);
+            save(SecurityUtil.getAuthUserId(), meal);
         }
+
+        Meal adminMeal1 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0),
+                "Завтрак админа", 400);
+        Meal adminMeal2 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0),
+                "Обед админа", 600);
+        Meal adminMeal3 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 16, 0),
+                "Полдник админа", 200);
+        save(2, adminMeal1);
+        save(2, adminMeal2);
+        save(2, adminMeal3);
     }
 
     @Override
@@ -68,12 +80,13 @@ public class InMemoryMealRepository implements MealRepository {
         return getFiltered(userId, null, null);
     }
 
-    public Collection<Meal> getFiltered(int userId, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
+    public Collection<Meal> getFiltered(int userId, LocalDate dateFrom, LocalDate dateTo) {
         Map<Integer, Meal> userMeal = repository.get(userId);
         return CollectionUtils.isEmpty(userMeal) ? Collections.emptyList() :
                 userMeal.values().stream()
-                        .filter(v -> DateTimeUtil.isBetweenHalfOpen(v.getDateTime(), dateTimeFrom, dateTimeTo))
+                        .filter(v -> DateTimeUtil.isBetween(v.getDate(), dateFrom, dateTo))
                         .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                         .collect(Collectors.toList());
     }
+
 }

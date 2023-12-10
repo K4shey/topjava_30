@@ -21,8 +21,30 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+
+    <form method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
+        <dl>
+            Date from (incl):
+            <input type="date" value="${fromDate}" name="fromDate">
+
+            Date to (incl):
+            <input type="date" value="${toDate}" name="toDate">
+        </dl>
+
+        <dl>
+            Time from (incl):
+            <input type="time" value="${fromTime}" name="fromTime">
+            Time to (excl):
+            <input type="time" value="${toTime}" name="toTime">
+        </dl>
+
+        <button type="submit">Filter</button>
+        <button onclick="window.history.back()" type="button">Cancel</button>
+    </form>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
